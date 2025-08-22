@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Digital Business Card</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0a84ff" />
+  <meta name="description" content="Tap to call, save contact, view services and hours." />
+
+  <style>
+    :root{
+      --bg:#f4f6f8;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --brand:#0a84ff;
+      --brand-2:#1f6fff;
+      --ring: 0 10px 24px rgba(16,24,40,.08), 0 2px 6px rgba(16,24,40,.06);
+      --radius:16px;
+    }
+    @media (prefers-color-scheme: dark){
+      :root{
+        --bg:#0b0f14;
+        --card:#111827;
+        --text:#e5e7eb;
+        --muted:#9ca3af;
+        --brand:#4da3ff;
+        --brand-2:#2f85f2;
+        --ring: 0 10px 24px rgba(0,0,0,.55), 0 2px 6px rgba(0,0,0,.45);
+      }
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 800px at 50% -10%, rgba(10,132,255,.12), transparent 40%), var(--bg);
+      color:var(--text);
+      display:grid;
+      min-height:100svh;
+      place-items:center;
+      padding:24px;
+    }
+    .card{
+      width:min(720px, 100%);
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--ring);
+      overflow:hidden;
+      border:1px solid rgba(100,116,139,.12);
+    }
+    .header{
+      padding:28px 24px 20px;
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:16px;
+      align-items:center;
+    }
+    .avatar{
+      width:84px;height:84px;border-radius:16px;object-fit:cover;
+      border:1px solid rgba(100,116,139,.18)
+    }
+    h1{
+      font-size:clamp(20px, 3.2vw, 28px);
+      line-height:1.15;margin:0 0 4px 0;
+    }
+    .role{margin:0;color:var(--muted);font-size:14px}
+    .contact{
+      display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 0
+    }
+    .btn{
+      appearance:none;border:none;cursor:pointer;
+      background:linear-gradient(180deg, var(--brand), var(--brand-2));
+      color:#fff;padding:10px 14px;border-radius:12px;
+      font-weight:600;font-size:14px;text-decoration:none;display:inline-flex;gap:8px;align-items:center;
+      box-shadow:0 1px 0 rgba(255,255,255,.25) inset, 0 8px 20px rgba(10,132,255,.25);
+      transition:transform .05s ease, filter .15s ease;
+      will-change:transform;
+    }
+    .btn:active{ transform: translateY(1px) }
+    .btn.secondary{
+      background:transparent;color:var(--text);
+      border:1px solid rgba(100,116,139,.25);
+      box-shadow:none;
+    }
+    .grid{
+      display:grid; gap:18px; padding:0 24px 22px;
+      grid-template-columns:1fr; 
+    }
+    @media (min-width:760px){
+      .grid{grid-template-columns:1.2fr .8fr}
+    }
+    section{
+      background:color-mix(in oklab, var(--card), var(--bg) 8%);
+      border:1px solid rgba(100,116,139,.12);
+      border-radius:14px;padding:16px;
+    }
+    section h2{
+      font-size:16px;margin:0 0 10px;color:var(--text)
+    }
+    ul{margin:0;padding-left:18px}
+    li{margin:6px 0}
+    .hours{display:grid;grid-template-columns:1fr auto;gap:8px;font-size:14px}
+    .divider{height:1px;background:rgba(100,116,139,.18);margin:8px 0 12px}
+    .muted{color:var(--muted)}
+    .chip{
+      display:inline-flex;align-items:center;gap:6px;
+      background:rgba(2,132,199,.12);color:#0284c7;border:1px solid rgba(2,132,199,.25);
+      padding:6px 10px;border-radius:999px;font-size:12px;font-weight:600
+    }
+    .footer{
+      padding:12px 20px 18px;color:var(--muted);font-size:12px;text-align:center
+    }
+    a.link{color:var(--brand);text-decoration:none}
+    a.link:hover{text-decoration:underline}
+    .sr{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+    /* subtle focus styles */
+    :focus-visible{outline: 3px solid color-mix(in oklab, var(--brand), white 25%); outline-offset: 3px; border-radius:10px}
+  </style>
+</head>
+<body>
+  <main class="card" itemscope itemtype="https://schema.org/Person">
+    <!-- HEADER -->
+    <div class="header">
+      <img id="avatar" class="avatar" alt="" />
+      <div>
+        <h1 id="fullName" itemprop="name">Your Name</h1>
+        <p id="role" class="role" itemprop="jobTitle">Your Role</p>
+        <div class="contact">
+          <a id="callBtn" class="btn" href="#" rel="nofollow">
+            <span aria-hidden="true">📞</span> Call
+          </a>
+          <a id="smsBtn" class="btn secondary" href="#" rel="nofollow">
+            <span aria-hidden="true">💬</span> Text
+          </a>
+          <a id="emailBtn" class="btn secondary" href="#" rel="nofollow" itemprop="email">
+            <span aria-hidden="true">✉️</span> Email
+          </a>
+          <button id="saveBtn" class="btn" type="button">
+            <span aria-hidden="true">💾</span> Save Contact
+          </button>
+          <button id="shareBtn" class="btn secondary" type="button">
+            <span aria-hidden="true">🔗</span> Share Card
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="grid">
+      <section aria-labelledby="services-title">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+          <h2 id="services-title">Services Offered</h2>
+          <span class="chip" id="yearsChip" title="Years in business">⭐ <span id="years">5+</span> yrs</span>
+        </div>
+        <ul id="services" itemprop="makesOffer"></ul>
+        <div class="divider"></div>
+        <p class="muted" style="margin:0">
+          <strong>Website:</strong> <a id="websiteLink" class="link" href="#" target="_blank" rel="noopener" itemprop="url">yourdomain.com</a>
+        </p>
+      </section>
+
+      <section aria-labelledby="hours-title">
+        <h2 id="hours-title">Operating Hours</h2>
+        <div class="hours" id="hours"></div>
+        <div class="divider"></div>
+        <p class="muted" id="addressWrap">
+          <strong>Address:</strong> <span id="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+            <span itemprop="streetAddress"></span>
+            <span itemprop="addressLocality"></span>
+            <span itemprop="addressRegion"></span>
+          </span>
+          <br />
+          <a id="mapBtn" class="link" href="#" target="_blank" rel="noopener">➜ Get Directions</a>
+        </p>
+      </section>
+    </div>
+
+    <div class="footer">
+      Tap <strong>Save Contact</strong> to add me to your phone. Works on iPhone & Android. ✔️
+    </div>
+  </main>
+
+  <script>
+    // === EDIT ME: your business data ==========================
+    const PROFILE = {
+      firstName: "Jadeem",
+      lastName: "Johnson",
+      displayName: "Jadeem Johnson",
+      role: "HRMIS Manager • Ministry of Education",
+      company: "Ministry of Education, Skill, Youth & Infomration",
+      phone: "+1-876-279-6809",
+      sms: "+1-876-279-6809",
+      email: "jadeem.johnson@moey.gov.jm",
+      website: "https://www.moey.gov.jm",
+      avatar: src="profile.png",
+      yearsInBusiness: "8",
+      address: {
+        line1: "2-4 National Heroes Circle",
+        city: "Kingston 5",
+        region: "JM",
+        postalCode: "876",
+        country: "Jamaica"
+      },
+      hours: [
+        { day: "Mon", open: "08:30", close: "05:00" },
+        { day: "Tue", open: "08:30", close: "05:00" },
+        { day: "Wed", open: "08:30", close: "05:00" },
+        { day: "Thu", open: "08:30", close: "05:00" },
+        { day: "Fri", open: "08:30", close: "04:00" },
+        { day: "Sat", open: null,  close: null },
+        { day: "Sun", open: null,  close: null } // closed
+      ],
+      services: [
+        "Web Design & Development",
+        "SEO Optimization",
+        "Digital Marketing Campaigns",
+        "Brand Strategy Consultations"
+      ],
+      notes: "Quality service with quick turnaround. Ask about our same-day consults."
+    };
+    // ==========================================================
+
+    // Helpers
+    const $ = (sel) => document.querySelector(sel);
+    const mapQuery = encodeURIComponent(
+      [PROFILE.address.line1, PROFILE.address.city, PROFILE.address.region, PROFILE.address.country].filter(Boolean).join(", ")
+    );
+
+    function formatTime(hhmm){
+      if(!hhmm) return "Closed";
+      // 24h -> 12h (e.g., 18:30 -> 6:30 PM)
+      const [h, m] = hhmm.split(":").map(Number);
+      const date = new Date();
+      date.setHours(h, m || 0);
+      return new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit" }).format(date);
+    }
+
+    function buildVCard(){
+      // vCard 3.0 for best mobile compatibility (iOS/Android)
+      const {
+        firstName, lastName, displayName, company, phone, email, website, address, notes, role
+      } = PROFILE;
+
+      const esc = (s) => String(s ?? "").replace(/(\r\n|\n|\r)/g, "\\n").replace(/,/g, "\\,").replace(/;/g, "\\;");
+      const adr = [
+        "", "", esc(address.line1 || ""),
+        esc(address.city || ""),
+        esc(address.region || ""),
+        esc(address.postalCode || ""),
+        esc(address.country || "")
+      ].join(";");
+
+      return [
+        "BEGIN:VCARD",
+        "VERSION:3.0",
+        `N:${esc(lastName)};${esc(firstName)};;;`,
+        `FN:${esc(displayName)}`,
+        company ? `ORG:${esc(company)}` : "",
+        role ? `TITLE:${esc(role)}` : "",
+        phone ? `TEL;TYPE=CELL,VOICE:${phone.replace(/\s+/g,"")}` : "",
+        email ? `EMAIL;TYPE=INTERNET:${esc(email)}` : "",
+        website ? `URL:${esc(website)}` : "",
+        address ? `ADR;TYPE=WORK:${adr}` : "",
+        notes ? `NOTE:${esc(notes)}` : "",
+        "END:VCARD"
+      ].filter(Boolean).join("\r\n");
+    }
+
+    function downloadVCard(){
+      const vcf = buildVCard();
+      const blob = new Blob([vcf], { type: "text/vcard;charset=utf-8" });
+      const fileName = `${(PROFILE.displayName || "contact").replace(/\s+/g,"_")}.vcf`;
+      // iOS Safari prefers a real link + click
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(()=>URL.revokeObjectURL(a.href), 1500);
+    }
+
+    async function shareCard(){
+      const text = `${PROFILE.displayName} • ${PROFILE.role}\nPhone: ${PROFILE.phone}\n${PROFILE.website}`;
+      const shareData = {
+        title: PROFILE.displayName,
+        text,
+        url: location.href
+      };
+
+      // Also attach vCard if supported
+      try{
+        if(navigator.canShare && window.Blob){
+          const file = new File([buildVCard()], `${PROFILE.displayName.replace(/\s+/g,"_")}.vcf`, { type: "text/vcard" });
+          if (navigator.canShare({ files:[file] })) {
+            shareData.files = [file];
+          }
+        }
+        if(navigator.share){
+          await navigator.share(shareData);
+          return;
+        }
+      }catch(e){ /* fall back to copy */ }
+
+      // Fallback: copy phone
+      try{
+        await navigator.clipboard.writeText(text);
+        alert("Card details copied. You can paste into a message. 💡");
+      }catch{
+        alert("Sharing not supported here. Long-press to copy the phone number.");
+      }
+    }
+
+    // Populate UI
+    function init(){
+      // identity
+      $("#avatar").src = PROFILE.avatar;
+      $("#avatar").alt = PROFILE.displayName;
+      $("#fullName").textContent = PROFILE.displayName;
+      $("#role").textContent = PROFILE.role;
+      $("#years").textContent = PROFILE.yearsInBusiness || "1+";
+
+      // contact links
+      $("#callBtn").href = `tel:${PROFILE.phone.replace(/[^\d+]/g,"")}`;
+      $("#smsBtn").href  = `sms:${PROFILE.sms.replace(/[^\d+]/g,"")}`;
+      $("#emailBtn").href = `mailto:${PROFILE.email}?subject=${encodeURIComponent("Inquiry")}`;
+
+      // website
+      $("#websiteLink").href = PROFILE.website;
+      $("#websiteLink").textContent = PROFILE.website.replace(/^https?:\/\//,'');
+
+      // address & maps
+      $("#mapBtn").href = `https://maps.google.com/?q=${mapQuery}`;
+      const addr = $("#address");
+      addr.querySelector('[itemprop="streetAddress"]').textContent = PROFILE.address.line1 + ", ";
+      addr.querySelector('[itemprop="addressLocality"]').textContent = PROFILE.address.city + ", ";
+      addr.querySelector('[itemprop="addressRegion"]').textContent = PROFILE.address.region;
+
+      // services
+      const svc = $("#services");
+      svc.innerHTML = PROFILE.services.map(s => `<li>${s}</li>`).join("");
+
+      // hours
+      const hours = $("#hours");
+      hours.innerHTML = PROFILE.hours.map(row => `
+        <div>${row.day}</div>
+        <div>${row.open && row.close ? `${formatTime(row.open)} – ${formatTime(row.close)}` : '<span class="muted">Closed</span>'}</div>
+      `).join("");
+
+      // buttons
+      $("#saveBtn").addEventListener("click", downloadVCard);
+      $("#shareBtn").addEventListener("click", shareCard);
+    }
+
+    // Run
+    init();
+  </script>
+</body>
+</html>
